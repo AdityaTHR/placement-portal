@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Placement Drive - Company{% endblock %}
+
+{% block content %}
+<div class="row pt-4 justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="fw-bold mb-4">Edit Placement Drive</h2>
+            <div class="alert alert-info py-2 small mb-4">
+                Updating this drive will require a new approval from the Admin.
+            </div>
+            <form method="POST">
+                <div class="mb-3">
+                    <label for="job_title" class="form-label">Job Title</label>
+                    <input type="text" class="form-control" id="job_title" name="job_title" value="{{ drive.job_title }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="job_description" class="form-label">Job Description</label>
+                    <textarea class="form-control" id="job_description" name="job_description" rows="5" required>{{ drive.job_description }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="eligibility" class="form-label">Eligibility Criteria</label>
+                    <textarea class="form-control" id="eligibility" name="eligibility" rows="3" required>{{ drive.eligibility_criteria }}</textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="deadline" class="form-label">Application Deadline</label>
+                    <input type="date" class="form-control" id="deadline" name="deadline" value="{{ drive.deadline.strftime('%Y-%m-%d') }}" required>
+                </div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="{{ url_for('company.dashboard') }}" class="btn btn-light px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-5">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

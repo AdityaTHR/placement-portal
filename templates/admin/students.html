@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Students - Admin{% endblock %}
+
+{% block content %}
+<div class="row pt-4 mb-4">
+    <div class="col-md-8">
+        <h2 class="fw-bold">Manage Students</h2>
+        <p class="text-secondary">View and manage student profiles and account status.</p>
+    </div>
+    <div class="col-md-4">
+        <form action="{{ url_for('admin.manage_students') }}" method="GET" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" placeholder="Name or ID..." value="{{ request.args.get('search', '') }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Student ID</th>
+                    <th>Full Name</th>
+                    <th>Dept.</th>
+                    <th>CGPA</th>
+                    <th>Account</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>STUD-{{ student.user_id }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.department }}</td>
+                    <td>{{ student.cgpa }}</td>
+                    <td>
+                        {% if student.user.is_active %}
+                            <span class="badge border text-success">Active</span>
+                        {% else %}
+                            <span class="badge border text-danger">Deactivated</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin.toggle_status', user_id=student.user_id) }}" class="btn btn-sm btn-outline-secondary">
+                            {% if student.user.is_active %}Deactivate{% else %}Activate{% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">No students found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row pt-4">
+    <div class="col-12 mb-4">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <p class="text-secondary">System-wide overview and statistics.</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-3 mb-4">
+        <div class="card bg-primary text-white p-4">
+            <h6 class="text-uppercase small mb-2">Total Students</h6>
+            <h2 class="fw-bold mb-0">{{ stats.total_students }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-info text-white p-4">
+            <h6 class="text-uppercase small mb-2">Total Companies</h6>
+            <h2 class="fw-bold mb-0">{{ stats.total_companies }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-success text-white p-4">
+            <h6 class="text-uppercase small mb-2">Placement Drives</h6>
+            <h2 class="fw-bold mb-0">{{ stats.total_drives }}</h2>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card bg-warning text-white p-4">
+            <h6 class="text-uppercase small mb-2">Total Applications</h6>
+            <h2 class="fw-bold mb-0">{{ stats.total_applications }}</h2>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">User Distribution</h5>
+            <div style="position: relative; height: 300px;">
+                <canvas id="userChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">Placement Drive Overview</h5>
+            <div style="position: relative; height: 300px;">
+                <canvas id="driveChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">Quick Actions</h5>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin.manage_companies') }}" class="list-group-item list-group-item-action px-0">Approve Company Registrations</a>
+                <a href="{{ url_for('admin.manage_drives') }}" class="list-group-item list-group-item-action px-0">Manage Placement Drives</a>
+                <a href="{{ url_for('admin.manage_students') }}" class="list-group-item list-group-item-action px-0">Manage Student Records</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100">
+            <h5 class="fw-bold mb-3">System Information</h5>
+            <p class="text-secondary small">This portal manages recruitment activities. As an admin, you can approve/reject company requests and monitor all placement activities.</p>
+            <div class="alert alert-light border small mt-auto">
+                All actions are logged for audit purposes.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const userCtx = document.getElementById('userChart').getContext('2d');
+    new Chart(userCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Students', 'Companies'],
+            datasets: [{
+                data: [{{ stats.total_students }}, {{ stats.total_companies }}],
+                backgroundColor: ['#2563eb', '#64748b'],
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    const driveCtx = document.getElementById('driveChart').getContext('2d');
+    new Chart(driveCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Drives', 'Applications'],
+            datasets: [{
+                label: 'System Activity',
+                data: [{{ stats.total_drives }}, {{ stats.total_applications }}],
+                backgroundColor: ['#10b981', '#f59e0b']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+{% endblock %}

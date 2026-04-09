@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Companies - Admin{% endblock %}
+
+{% block content %}
+<div class="row pt-4 mb-4">
+    <div class="col-md-8">
+        <h2 class="fw-bold">Manage Companies</h2>
+        <p class="text-secondary">Approve or reject company registrations and manage account status.</p>
+    </div>
+    <div class="col-md-4">
+        <form action="{{ url_for('admin.manage_companies') }}" method="GET" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" placeholder="Search by name..." value="{{ request.args.get('search', '') }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Company Name</th>
+                    <th>HR Contact</th>
+                    <th>Status</th>
+                    <th>Account</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                <tr>
+                    <td>
+                        <div class="fw-bold">{{ company.name }}</div>
+                        <div class="small text-muted">{{ company.website }}</div>
+                    </td>
+                    <td>{{ company.hr_contact }}</td>
+                    <td>
+                        {% if company.approval_status == 'Approved' %}
+                            <span class="badge bg-success">Approved</span>
+                        {% elif company.approval_status == 'Rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if company.user.is_active %}
+                            <span class="badge border text-success">Active</span>
+                        {% else %}
+                            <span class="badge border text-danger">Blacklisted</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            {% if company.approval_status == 'Pending' %}
+                                <a href="{{ url_for('admin.approve_company', id=company.id) }}" class="btn btn-sm btn-outline-success">Approve</a>
+                                <a href="{{ url_for('admin.reject_company', id=company.id) }}" class="btn btn-sm btn-outline-danger">Reject</a>
+                            {% endif %}
+                            <a href="{{ url_for('admin.toggle_status', user_id=company.user_id) }}" class="btn btn-sm btn-secondary ms-2">
+                                {% if company.user.is_active %}Blacklist{% else %}Activate{% endif %}
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">No companies found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

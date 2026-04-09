@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Placement Drives - Admin{% endblock %}
+
+{% block content %}
+<div class="row pt-4 mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">Manage Placement Drives</h2>
+        <p class="text-secondary">Review and approve placement drives created by various companies.</p>
+    </div>
+</div>
+
+<div class="card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Drive Title</th>
+                    <th>Company</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for drive in drives %}
+                <tr>
+                    <td>
+                        <div class="fw-bold">{{ drive.job_title }}</div>
+                        <div class="small text-muted text-truncate" style="max-width: 200px;">{{ drive.job_description }}</div>
+                    </td>
+                    <td>{{ drive.company_profile.name }}</td>
+                    <td>{{ drive.deadline.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {% if drive.status == 'Approved' %}
+                            <span class="badge bg-success">Approved</span>
+                        {% elif drive.status == 'Rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% elif drive.status == 'Closed' %}
+                            <span class="badge bg-secondary">Closed</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if drive.status == 'Pending' %}
+                            <div class="btn-group">
+                                <a href="{{ url_for('admin.approve_drive', id=drive.id) }}" class="btn btn-sm btn-outline-success">Approve</a>
+                                <a href="{{ url_for('admin.reject_drive', id=drive.id) }}" class="btn btn-sm btn-outline-danger">Reject</a>
+                            </div>
+                        {% else %}
+                            <span class="text-muted small">No actions pending</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-muted">No placement drives found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

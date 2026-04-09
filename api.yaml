@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: Placement Portal API
+  description: API endpoints for accessing public components of the IITM Madrid-1 Placement Portal.
+  version: 1.0.0
+
+servers:
+  - url: /api
+    description: Internal API server
+
+paths:
+  /companies:
+    get:
+      summary: Retrieve all approved companies
+      description: Returns a list of all currently approved companies operating placement drives.
+      responses:
+        '200':
+          description: A list of companies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    website:
+                      type: string
+
+  /drives:
+    get:
+      summary: Retrieve all approved placement drives
+      description: Returns all currently active and approved drives.
+      responses:
+        '200':
+          description: A JSON array of drives
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    job_title:
+                      type: string
+                    company_name:
+                      type: string
+                    deadline:
+                      type: string
+                      format: date-time

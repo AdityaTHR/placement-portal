@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold mb-4">Empowering Campus Recruitment</h1>
+        <p class="lead text-secondary mb-4">A streamlined platform connecting bright students with top-tier companies. Manage drives, applications, and placement records with ease.</p>
+        <div class="d-grid gap-3 d-md-flex">
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('auth.register_student') }}" class="btn btn-primary btn-lg px-4">Get Started as Student</a>
+                <a href="{{ url_for('auth.register_company') }}" class="btn btn-outline-primary btn-lg px-4">Register as Company</a>
+            {% else %}
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg px-4">Go to Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-6 mt-5 mt-lg-0 text-center">
+        <!-- Placeholder for Image or Graphics -->
+        <div class="p-5 bg-white rounded-circle shadow-sm d-inline-block">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="currentColor" class="bi bi-briefcase text-primary" viewBox="0 0 16 16">
+                <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z"/>
+            </svg>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4">
+            <h3 class="h5 fw-bold mb-3">For Students</h3>
+            <p class="text-secondary">Discover placement drives, apply with a single click, and track your application status in real-time.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4">
+            <h3 class="h5 fw-bold mb-3">For Companies</h3>
+            <p class="text-secondary">Create recruitment drives, shortlist candidates, and manage your hiring process efficiently.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 p-4">
+            <h3 class="h5 fw-bold mb-3">For Admin</h3>
+            <p class="text-secondary">Full control over company approvals, student management, and placement statistics.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

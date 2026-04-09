@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="row pt-4 mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">Welcome, {{ profile.name }}</h2>
+        <p class="text-secondary">Explore available placement drives and take the next step in your career.</p>
+        
+        {% if not profile.resume_path %}
+            <div class="alert alert-warning d-flex align-items-center mt-3 shadow-sm border-0" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>
+                    <strong>Action Required:</strong> You cannot apply to any drives until you upload your resume. 
+                    <a href="{{ url_for('student.profile') }}" class="alert-link ms-1 text-decoration-underline">Upload Now</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 text-md-start">
+        <form method="GET" class="d-flex align-items-center">
+            <input type="text" name="keyword" class="form-control me-2" placeholder="Filter by keyword (e.g. CS, Analyst)...">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for drive in drives %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="badge bg-light text-primary border border-primary small">Approved Drive</span>
+                <span class="text-muted small">Deadline: {{ drive.deadline.strftime('%b %d, %Y') }}</span>
+            </div>
+            {% if drive.is_recommended %}
+                <div class="mb-2">
+                    <span class="badge bg-success p-2 small fw-bold">
+                        ⭐ AI Recommended for You (Eligible)
+                    </span>
+                </div>
+            {% endif %}
+            <h4 class="h5 fw-bold mb-2">{{ drive.job_title }}</h4>
+            <h6 class="text-primary mb-3">{{ drive.company_profile.name }}</h6>
+            <p class="text-secondary small text-truncate-3 mb-4">
+                {{ drive.job_description }}
+            </p>
+            
+            <div class="mb-4">
+                <div class="fw-bold small mb-1">Eligibility:</div>
+                <div class="text-secondary small">{{ drive.eligibility_criteria }}</div>
+            </div>
+
+            <div class="mt-auto d-grid">
+                {% if drive.id in applied_drives %}
+                    {% set app_status = applied_drives[drive.id] %}
+                    
+                    {% if app_status == 'Selected' %}
+                        <button class="btn btn-success fw-bold" disabled>🎉 You are Selected!</button>
+                    {% elif app_status == 'Rejected' %}
+                        <button class="btn btn-danger" disabled>Status: Rejected</button>
+                    {% elif app_status == 'Shortlisted' %}
+                        <button class="btn btn-info text-white" disabled>Status: Shortlisted</button>
+                    {% else %}
+                        <button class="btn btn-secondary" disabled>Status: Applied</button>
+                    {% endif %}
+                    
+                {% else %}
+                    <a href="{{ url_for('student.apply_for_drive', drive_id=drive.id) }}" class="btn btn-primary fw-bold">Apply Now</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="card p-5 text-center bg-light">
+            <h5 class="text-muted">No placement drives found at the moment.</h5>
+            <p class="text-secondary mb-0">Check back later for new opportunities!</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
